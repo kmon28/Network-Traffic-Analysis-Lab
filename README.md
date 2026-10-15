@@ -1,11 +1,50 @@
 # Network Traffic Analysis & Active Directory Investigation
 
-**Wireshark | Windows Server 2022 | Active Directory | VirtualBox | Network Troubleshooting**
+> **Hands-on network security portfolio:** Wireshark + Windows Server 2022 + Active Directory + VirtualBox, with packet-level troubleshooting, authentication-protocol analysis, capture engineering, and evidence-based incident investigation.
 
-## Executive summary
+![Windows Server 2022](https://img.shields.io/badge/Windows_Server-2022-2874A6?style=flat-square)
+![Wireshark](https://img.shields.io/badge/Wireshark-Packet_Analysis-1679A7?style=flat-square)
+![Active Directory](https://img.shields.io/badge/Active_Directory-DNS_%26_IAM-4B5563?style=flat-square)
+![VirtualBox](https://img.shields.io/badge/VirtualBox-Network_Lab-2874A6?style=flat-square)
+![Evidence](https://img.shields.io/badge/Evidence-10_Screenshots_%2B_PCAP-218838?style=flat-square)
+![Status](https://img.shields.io/badge/Project-Documented-218838?style=flat-square)
+
+**Quick navigation:** [Results](#investigation-results-at-a-glance) · [Lab architecture](#lab-environment) · [Investigations](#investigation-workflow) · [Evidence](#evidence-index) · [Limitations](#evidence-and-limitations)
+
+## Executive Summary
 Analyzed network traffic in an isolated Windows Active Directory lab to understand normal domain communications, troubleshoot a failed ICMP test, and investigate unsuccessful TCP connections. The key outcomes were **a validated, subnet-scoped firewall remediation**, **a better packet-capture method for VM-to-VM traffic**, and **evidence-based interpretation of TCP/9997 retransmissions without labeling them malicious**.
 
 > **Evidence standard:** The observations below are drawn from the lab notes and screenshots. The supplied PCAP is identified as ICMP evidence; packet numbers for other protocols refer to the original Wireshark investigation and are not independently revalidated from that PCAP. The Splunk explanation is a hypothesis, not process attribution.
+
+## Investigation results at a glance
+
+| Investigation | Observation | Outcome / interpretation |
+|---|---|---|
+| ICMP firewall | Four inbound Echo Requests with no replies before remediation | Scoped Windows Firewall rule; four successful replies on retest |
+| VM capture visibility | Host-only interface missed VM-to-VM unicast traffic | VirtualBox NIC tracing provided an effective alternate observation point |
+| DNS / AD discovery | A/AAAA lookups and domain-related SRV queries | Baseline for DNS resolution and domain controller discovery |
+| TCP / Kerberos / SMB / LDAP | Handshake, TGS exchange, SYSVOL access, and successful LDAP search | Documented expected domain communication patterns |
+| TCP/9997 | SYN retransmissions without an observed completed handshake | Connectivity issue investigated; process and root cause not conclusively attributed |
+
+## Network architecture
+
+```text
+                     Isolated VirtualBox lab
+               Host-only network: 192.168.56.0/24
+
+  CLIENT01 (Windows 10)                 DC02 (Windows Server 2022)
+       192.168.56.102   <---------->       192.168.56.101
+       Domain joined                    AD DS / DNS / lab.local
+              |                                 |
+              +--------- VirtualBox ------------+
+                           |
+                    Dell host / Wireshark
+                       192.168.56.1
+
+  Host-only interface capture: incomplete VM-to-VM visibility
+  CLIENT01 NIC trace: alternate capture point for VM traffic
+  NAT connectivity: separately available when needed
+```
 
 ## Lab environment
 
@@ -104,10 +143,41 @@ Filter: `tcp.analysis.flags`. CLIENT01 repeatedly sent **SYN retransmissions** t
 4. **Avoid false positives:** TCP retransmissions and Kerberos errors warrant context and corroboration, not automatic attack labels.
 5. **Evidence boundaries:** screenshots document protocol observations; an original PCAP permits independent packet-level verification.
 
+## Evidence index
+
+The following files are committed to this repository. Screenshots support the documented observations; the available PCAP specifically supports the ICMP investigation.
+
+| Evidence | File |
+|---|---|
+| ICMP firewall validation | [Screenshot](screenshots/01_icmp_request_reply_validation.png) |
+| DNS A/AAAA query and response | [Screenshot](screenshots/02_Wireshark_DNS_Query_Response_Client01_DC02.png) |
+| AD DNS service discovery | [Screenshot](screenshots/03_Wireshark_AD_DNS_Service_Discovery.png) |
+| Additional AD LDAP/DNS discovery | [Screenshot](screenshots/03_Wireshark_AD_LDAP_DNS_Service_Discovery.png) |
+| TCP three-way handshake | [Screenshot](screenshots/04_Wireshark_TCP_Three_Way_Handshake.png) |
+| Kerberos TGS exchange | [Screenshot](screenshots/05_Wireshark_Kerberos_TCG_Auhentication.png) |
+| SMB2 SYSVOL policy access | [Screenshot](screenshots/06_Wireshark_SMB_SYSVOL_Domain_Policy_Access.png) |
+| LDAP search response | [Screenshot](screenshots/Wireshark_LDAP_AD_Search_Response_Success.png) |
+| TCP retransmissions | [Screenshot](screenshots/08_Wireshark_TCP_Retrasmission_Investigation.png) |
+| Protocol hierarchy | [Screenshot](screenshots/09_Wireshark_Protocol_Hierarchy_Traffic_Overview.png) |
+| ICMP capture | [Download PCAPNG](pcaps/ICMP_Firewall_Investigation.pcapng) |
+
+## Reproduction and analyst validation
+
+To reproduce the *method* in a controlled lab, deploy a Windows domain controller and domain-joined client on an isolated VirtualBox host-only subnet, generate DNS and domain logon traffic, and compare host-side Wireshark visibility with VM NIC tracing. Use a **test-only, subnet-scoped** ICMP firewall rule when validating the ping scenario; avoid disabling the host firewall wholesale.
+
+For independent review of the included ICMP capture:
+
+1. Open [the PCAPNG](pcaps/ICMP_Firewall_Investigation.pcapng) in Wireshark.
+2. Apply `icmp` and compare Echo Request (`icmp.type == 8`) versus Echo Reply (`icmp.type == 0`) packets, source/destination IPs, and timing.
+3. Correlate packet observations with the [ICMP screenshot](screenshots/01_icmp_request_reply_validation.png) and the written remediation timeline.
+4. Do not infer that the ICMP PCAP contains Kerberos, LDAP, SMB, or TCP/9997 evidence; those observations are documented through separate screenshots and notes.
+
+**Suggested follow-up validation for TCP/9997:** check `netstat -ano` or `Get-NetTCPConnection` on CLIENT01, map any owning PID to a process, inspect Splunk Universal Forwarder output configuration and service state, verify a listener on DC02, and repeat a timestamped capture. These are **next investigative steps, not actions claimed completed**.
+
 ## Evidence and limitations
 
 **Original capture:** [ICMP_Firewall_Investigation.pcapng](pcaps/ICMP_Firewall_Investigation.pcapng). The screenshot evidence links above point to the images in `screenshots/`.
 
-The `screenshots/` folder contains the ten supplied Wireshark screenshots. The [ICMP firewall investigation PCAP](pcaps/ICMP_Firewall_Investigation.pcapng) is stored in `pcaps/`. The original broader VirtualBox NIC trace is **not asserted to be separately available here**. Packet numbers and detailed field values outside the ICMP investigation are retained from the original exercise notes and screenshots.
+The `screenshots/` folder contains the ten Wireshark screenshots. The [ICMP firewall investigation PCAP](pcaps/ICMP_Firewall_Investigation.pcapng) is stored in `pcaps/`. The original broader VirtualBox NIC trace is **not asserted to be separately available here**. Packet numbers and detailed field values outside the ICMP investigation are retained from the original exercise notes and screenshots.
 
 **Interview summary:** I built an Active Directory lab, analyzed authentication and directory protocols in Wireshark, diagnosed and fixed an ICMP firewall issue with packet evidence, changed my capture method when host-side visibility was inadequate, and investigated SYN retransmissions without overstating attribution.
