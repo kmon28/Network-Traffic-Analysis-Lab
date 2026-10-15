@@ -106,8 +106,8 @@ Filter: `tcp.analysis.flags`. CLIENT01 repeatedly sent **SYN retransmissions** t
 
 ## Evidence and limitations
 
-**Original capture:** [ICMP_Firewall_Investigation.pcapng](ICMP_Firewall_Investigation.pcapng). The screenshot evidence links above point to the original uploaded images in the repository root.
+**Original capture:** [ICMP_Firewall_Investigation.pcapng](pcaps/ICMP_Firewall_Investigation.pcapng). The screenshot evidence links above point to the images in `screenshots/`.
 
-The repository root contains the ten supplied Wireshark screenshots. The [ICMP firewall investigation PCAP](ICMP_Firewall_Investigation.pcapng) is included in the repository root. The original broader VirtualBox NIC trace is **not asserted to be separately available here**. Packet numbers and detailed field values outside the ICMP investigation are retained from the original exercise notes and screenshots.
+The `screenshots/` folder contains the ten supplied Wireshark screenshots. The [ICMP firewall investigation PCAP](pcaps/ICMP_Firewall_Investigation.pcapng) is stored in `pcaps/`. The original broader VirtualBox NIC trace is **not asserted to be separately available here**. Packet numbers and detailed field values outside the ICMP investigation are retained from the original exercise notes and screenshots.
 
 **Interview summary:** I built an Active Directory lab, analyzed authentication and directory protocols in Wireshark, diagnosed and fixed an ICMP firewall issue with packet evidence, changed my capture method when host-side visibility was inadequate, and investigated SYN retransmissions without overstating attribution.
