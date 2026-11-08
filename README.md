@@ -113,6 +113,12 @@ Filtering `dns.qry.name contains "lab.local"` showed **Active Directory service-
 
 ![DNS A and AAAA request/response evidence](screenshots/02_Wireshark_DNS_Query_Response_Client01_DC02.png)
 
+**Additional Active Directory service-discovery evidence:** The following original captures illustrate domain-related DNS queries. They complement the A/AAAA resolution screenshot rather than proving malicious activity.
+
+![AD DNS service discovery](screenshots/03_Wireshark_AD_DNS_Service_Discovery.png)
+
+![AD LDAP-related DNS service discovery](screenshots/03_Wireshark_AD_LDAP_DNS_Service_Discovery.png)
+
 ### 4. TCP: successful connection establishment
 **Evidence:** [TCP handshake](screenshots/04_Wireshark_TCP_Three_Way_Handshake.png)
 
