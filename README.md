@@ -92,12 +92,20 @@ The Dell's Windows Defender Firewall was inspected. A **custom inbound ICMPv4 al
 
 After retesting, **4 requests received 4 replies**; the trace showed **Echo Replies (type 0)**. This supports the destination firewall configuration as the cause of the observed failure, with a narrowly scoped fix instead of disabling the firewall.
 
+**Original investigation screenshot:**
+
+![ICMP requests and responses before and after scoped firewall remediation](screenshots/01_icmp_request_reply_validation.png)
+
 ### 3. DNS: ordinary resolution and AD discovery
 **Evidence:** [DNS lookup](screenshots/02_Wireshark_DNS_Query_Response_Client01_DC02.png) · [AD discovery](screenshots/03_Wireshark_AD_DNS_Service_Discovery.png) · [additional AD DNS view](screenshots/03_Wireshark_AD_LDAP_DNS_Service_Discovery.png)
 
 On CLIENT01, `nslookup google.com 192.168.56.101` succeeded. The filter `dns && dns.qry.name == "google.com"` isolated **A and AAAA requests and responses** between CLIENT01 and DC02. The resolver label `Unknown` in nslookup did not indicate lookup failure. Returned public IPs can change.
 
 Filtering `dns.qry.name contains "lab.local"` showed **Active Directory service-discovery DNS traffic**, including LDAP/DC-related SRV names under `_tcp` and `_msdcs.lab.local`. This illustrates how a domain-joined workstation discovers directory services.
+
+**Original investigation screenshot:**
+
+![DNS A and AAAA request/response evidence](screenshots/02_Wireshark_DNS_Query_Response_Client01_DC02.png)
 
 ### 4. TCP: successful connection establishment
 **Evidence:** [TCP handshake](screenshots/04_Wireshark_TCP_Three_Way_Handshake.png)
@@ -109,20 +117,36 @@ Packets **367–369** show a complete handshake:
 
 This baseline helps distinguish established connections from repeated connection attempts and resets.
 
+**Original investigation screenshot:**
+
+![TCP SYN, SYN/ACK and ACK connection establishment](screenshots/04_Wireshark_TCP_Three_Way_Handshake.png)
+
 ### 5. Kerberos: service-ticket exchange
 **Evidence:** [Kerberos TGS exchange](screenshots/05_Wireshark_Kerberos_TCG_Auhentication.png)
 
 Filter: `kerberos`. Packet **415** was a **TGS-REQ** from CLIENT01 to DC02 on port **88**, realm `LAB.LOCAL`; packet **418** was the associated **TGS-REP**. A machine-account name appeared in the request. Kerberos provides ticket-based service authentication. Some `KRB5KDC_ERR_S_PRINCIPAL_UNKNOWN` errors were present, but **no malicious cause was established**.
+
+**Original investigation screenshot:**
+
+![Kerberos TGS request and response evidence](screenshots/05_Wireshark_Kerberos_TCG_Auhentication.png)
 
 ### 6. SMB2: SYSVOL and domain policy
 **Evidence:** [SMB/SYSVOL](screenshots/06_Wireshark_SMB_SYSVOL_Domain_Policy_Access.png)
 
 Filter: `smb2`. Packet **469** was a **Session Setup Response** with `STATUS_SUCCESS`; packet **471** showed a successful **Tree Connect response** associated with `\\WIN-QDGUB4SSHAG.lab.local\SysVol`. Subsequent traffic referenced `lab.local\Policies`. This demonstrates client access to domain policy resources via SMB.
 
+**Original investigation screenshot:**
+
+![SMB2 session and SYSVOL tree connection](screenshots/06_Wireshark_SMB_SYSVOL_Domain_Policy_Access.png)
+
 ### 7. LDAP: successful directory search
 **Evidence:** [LDAP search](screenshots/Wireshark_LDAP_AD_Search_Response_Success.png)
 
 Filter: `ldap`. Packet **491** contained a root/base-object LDAP search request; packet **493** was the corresponding response. Wireshark showed **four results**, `searchResDone: success`, and approximately **805 μs** response time. LDAP provides directory queries; it is distinct from Kerberos ticket-based authentication.
+
+**Original investigation screenshot:**
+
+![LDAP search and successful result](screenshots/Wireshark_LDAP_AD_Search_Response_Success.png)
 
 ### 8. TCP/9997: investigate, don't assume compromise
 **Evidence:** [Retransmission analysis](screenshots/08_Wireshark_TCP_Retrasmission_Investigation.png)
@@ -131,10 +155,43 @@ Filter: `tcp.analysis.flags`. CLIENT01 repeatedly sent **SYN retransmissions** t
 
 **Hypothesis:** TCP/9997 had been configured for Splunk Universal Forwarder → Splunk Enterprise traffic in this lab, so unsuccessful or stale forwarding connectivity was plausible. **Not proven:** the originating process was not correlated to an executable or PID; neither an attack nor a specific service root cause was established.
 
+**Original investigation screenshot:**
+
+![TCP retransmissions investigated without unsupported attribution](screenshots/08_Wireshark_TCP_Retrasmission_Investigation.png)
+
 ### 9. Capture-wide protocol overview
 **Evidence:** [Protocol hierarchy](screenshots/09_Wireshark_Protocol_Hierarchy_Traffic_Overview.png)
 
 **Statistics → Protocol Hierarchy** summarized **1,770 packets** after clearing the temporary `tcp.stream eq 36` display filter. Always verify whether statistics apply to the full capture or only displayed packets.
+
+**Original investigation screenshot:**
+
+![Wireshark protocol hierarchy statistics](screenshots/09_Wireshark_Protocol_Hierarchy_Traffic_Overview.png)
+
+## Technical Summary & Key Takeaways
+
+**Executive technical recap:** I investigated an Active Directory network using Wireshark, recognized that the host capture point missed VM-to-VM traffic, enabled VirtualBox NIC tracing, validated a narrowly scoped ICMP firewall fix, and analyzed DNS, TCP, Kerberos, SMB2 and LDAP exchanges. I treated TCP/9997 retransmissions as a connectivity lead rather than declaring an attack.
+
+| Engineering decision | Why it matters |
+|---|---|
+| Compare capture locations | Packet visibility depends on the observation point |
+| Use an ICMP-only subnet rule | Tests connectivity without disabling the host firewall |
+| Follow DNS SRV records | Explains how Windows clients discover domain services |
+| Inspect TCP flags | Separates completed connections from failed handshakes |
+| Review Kerberos and SMB2 status | Avoids confusing authentication success with host compromise |
+| Investigate retransmissions cautiously | Prevents false attribution without process-level evidence |
+
+<details><summary>Engineering consideration: What does a missing packet prove?</summary>
+
+Only that the packet was not observed at that capture point with those capture settings. It does not establish that the packet never traversed the network.
+
+</details>
+
+<details><summary>Engineering consideration: How would you validate TCP/9997 ownership?</summary>
+
+Map the connection to a PID and executable, inspect the relevant forwarding service and listener, and repeat a timestamped capture. These are suggested follow-up steps, not completed lab actions.
+
+</details>
 
 ## Wireshark filter reference
 
