@@ -11,6 +11,18 @@
 
 **Quick navigation:** [Results](#investigation-results-at-a-glance) · [Lab architecture](#lab-environment) · [Investigations](#investigation-workflow) · [Evidence](#evidence-index) · [Limitations](#evidence-and-limitations)
 
+## 🧭 About this repository — recruiter and technical reviewer guide
+
+**Purpose:** A packet-analysis and network troubleshooting portfolio focused on how Active Directory systems communicate and how an analyst can distinguish expected protocol behavior, connectivity problems, and suspicious signals without overclaiming attribution.
+
+**Environment and tools:** Wireshark, VirtualBox NIC tracing, Windows Server 2022 DC02 (AD DS/DNS), Windows 10 CLIENT01, host-only subnet `192.168.56.0/24`, and saved capture evidence.
+
+**What is documented:** ICMP firewall diagnosis and scoped remediation; limitations of host-only adapter captures; DNS A/AAAA and AD SRV discovery; TCP handshake and retransmission analysis; Kerberos ticket-service exchanges; SMB2/SYSVOL and LDAP communication. The report distinguishes the verified ICMP PCAP from observations supported only by original screenshots and notes.
+
+**How to review:** Read the [investigation workflow](#investigation-workflow), [results table](#investigation-results-at-a-glance), and [evidence index](#evidence-index). Consult the [common report standard](docs/PORTFOLIO-REPORT-STANDARD.md) for inline screenshots, reasoning, limitations, five-minute refreshers, and interview defense.
+
+**Outcome and relevance:** Demonstrates packet-capture design, network protocol fluency, evidence-based troubleshooting, Windows firewall validation, and disciplined interpretation of incomplete captures. This is a controlled lab, not a claimed production intrusion.
+
 ## Executive Summary
 Analyzed network traffic in an isolated Windows Active Directory lab to understand normal domain communications, troubleshoot a failed ICMP test, and investigate unsuccessful TCP connections. The key outcomes were **a validated, subnet-scoped firewall remediation**, **a better packet-capture method for VM-to-VM traffic**, and **evidence-based interpretation of TCP/9997 retransmissions without labeling them malicious**.
 
