@@ -1,5 +1,8 @@
 # Network Traffic Analysis & Active Directory Investigation
 
+**Reviewer quick reference:** [Packet triage](docs/packet-triage-quick-reference.md) — a concise evidence-first guide to interpreting findings, alternative explanations, and limitations.
+
+
 
 ## Featured Investigations — 60-Second Review
 
