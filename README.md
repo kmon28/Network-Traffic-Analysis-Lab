@@ -12,7 +12,7 @@
 | [Active Directory protocol analysis](#investigation-workflow) | Examined DNS, Kerberos, SMB and LDAP activity in a controlled domain | [Screenshot evidence](screenshots/) |
 | [TCP retransmission investigation](#investigation-workflow) | Distinguished failed connection attempts from unverified root-cause hypotheses | [Findings](#investigation-results-at-a-glance) |
 
-**For technical reviewers:** Open the linked report to examine the observations, limitations, and supporting evidence. These projects document controlled lab activity, not actual production incidents.
+**For technical reviewers:** Review the investigation narratives below alongside the linked packet capture and screenshots to examine observations, limitations, and supporting evidence. These projects document controlled lab activity, not actual production incidents.
 
 
 > **Hands-on network security portfolio:** Wireshark + Windows Server 2022 + Active Directory + VirtualBox, with packet-level troubleshooting, authentication-protocol analysis, capture engineering, and evidence-based incident investigation.
@@ -286,6 +286,6 @@ For independent review of the included ICMP capture:
 
 **Original capture:** [ICMP_Firewall_Investigation.pcapng](pcaps/ICMP_Firewall_Investigation.pcapng). The screenshot evidence links above point to the images in `screenshots/`.
 
-The `screenshots/` folder contains the ten Wireshark screenshots. The [ICMP firewall investigation PCAP](pcaps/ICMP_Firewall_Investigation.pcapng) is stored in `pcaps/`. The original broader VirtualBox NIC trace is **not asserted to be separately available here**. Packet numbers and detailed field values outside the ICMP investigation are retained from the original exercise notes and screenshots.
+The `screenshots/` folder contains ten Wireshark screenshots. An identical LDAP image also appears at the repository root; it is a duplicate, not an eleventh independent artifact. The [ICMP firewall investigation PCAP](pcaps/ICMP_Firewall_Investigation.pcapng) is stored in `pcaps/`. The original broader VirtualBox NIC trace is **not asserted to be separately available here**. Packet numbers and detailed field values outside the ICMP investigation are retained from the original exercise notes and screenshots.
 
 **Interview summary:** I built an Active Directory lab, analyzed authentication and directory protocols in Wireshark, diagnosed and fixed an ICMP firewall issue with packet evidence, changed my capture method when host-side visibility was inadequate, and investigated SYN retransmissions without overstating attribution.
