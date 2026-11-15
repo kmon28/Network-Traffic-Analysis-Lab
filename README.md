@@ -42,6 +42,17 @@
 
 **[Technical reviewer guide](docs/reviewer-guide.md)** — a five-minute evidence path, artifact provenance, and interview questions.
 
+## Analyst review: from packets to conclusions
+
+**Connectivity:** [Original ICMP capture](pcaps/ICMP_Firewall_Investigation.pcapng) and [validation screenshot](screenshots/01_icmp_request_reply_validation.png) document a before/after test of a subnet-scoped firewall rule.
+
+**Capture reliability:** [Investigation workflow](#investigation-workflow) explains why host-only interface visibility was insufficient and why VirtualBox NIC tracing changed the observation point.
+
+**Authentication context:** [Evidence index](#evidence-index) provides the DNS, Kerberos, SMB, and LDAP views; these are not all contained in the ICMP PCAP.
+
+**Analyst caution:** TCP retransmissions establish a missing observed response, not the identity of the responsible process or a definitive root cause. Capture placement and evidence scope matter.
+
+
 ## Executive Summary
 Analyzed network traffic in an isolated Windows Active Directory lab to understand normal domain communications, troubleshoot a failed ICMP test, and investigate unsuccessful TCP connections. The key outcomes were **a validated, subnet-scoped firewall remediation**, **a better packet-capture method for VM-to-VM traffic**, and **evidence-based interpretation of TCP/9997 retransmissions without labeling them malicious**.
 
