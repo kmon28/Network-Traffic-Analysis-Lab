@@ -1,5 +1,16 @@
 # Network Traffic Analysis & Active Directory Investigation
 
+## Featured Investigations — 60-Second Review
+
+| Case study | What it demonstrates | Open evidence |
+| --- | --- | --- |
+| [ICMP connectivity investigation](#investigation-workflow) | Used packet evidence to investigate missing Echo Replies and validate a scoped firewall change | [Original capture](pcaps/ICMP_Firewall_Investigation.pcapng) |
+| [Active Directory protocol analysis](#investigation-workflow) | Examined DNS, Kerberos, SMB and LDAP activity in a controlled domain | [Screenshot evidence](screenshots/) |
+| [TCP retransmission investigation](#investigation-workflow) | Distinguished failed connection attempts from unverified root-cause hypotheses | [Findings](#investigation-results-at-a-glance) |
+
+**For technical reviewers:** Open the linked report to examine the observations, limitations, and supporting evidence. These projects document controlled lab activity, not actual production incidents.
+
+
 > **Hands-on network security portfolio:** Wireshark + Windows Server 2022 + Active Directory + VirtualBox, with packet-level troubleshooting, authentication-protocol analysis, capture engineering, and evidence-based incident investigation.
 
 ![Windows Server 2022](https://img.shields.io/badge/Windows_Server-2022-2874A6?style=flat-square)
