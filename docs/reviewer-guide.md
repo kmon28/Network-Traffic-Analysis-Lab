@@ -6,7 +6,7 @@
 2. Inspect [ICMP request/reply evidence](../screenshots/01_icmp_request_reply_validation.png) and the [original ICMP capture](../pcaps/ICMP_Firewall_Investigation.pcapng). The observed before/after result supports the subnet-scoped firewall fix.
 3. Examine [DNS resolution](../screenshots/02_Wireshark_DNS_Query_Response_Client01_DC02.png), [AD service discovery](../screenshots/03_Wireshark_AD_DNS_Service_Discovery.png), [TCP handshake](../screenshots/04_Wireshark_TCP_Three_Way_Handshake.png), and [Kerberos exchange](../screenshots/05_Wireshark_Kerberos_TCG_Auhentication.png).
 4. Read the [capture-placement limitation](../README.md#1-capture-placement-a-visibility-limitation) before interpreting missing packets.
-5. Review the [TCP/9997 investigation](../README.md) and its unresolved attribution: retransmissions alone do not establish a process owner, malicious intent, or a root cause.
+5. Review the [TCP/9997 investigation](../README.md#8-tcp9997-investigate-dont-assume-compromise) and its unresolved attribution: retransmissions alone do not establish a process owner, malicious intent, or a root cause.
 
 ## Evidence provenance
 
