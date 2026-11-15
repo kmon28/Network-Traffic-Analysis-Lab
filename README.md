@@ -31,13 +31,12 @@
 
 **What is documented:** ICMP firewall diagnosis and scoped remediation; limitations of host-only adapter captures; DNS A/AAAA and AD SRV discovery; TCP handshake and retransmission analysis; Kerberos ticket-service exchanges; SMB2/SYSVOL and LDAP communication. The report distinguishes the verified ICMP PCAP from observations supported only by original screenshots and notes.
 
-**How to review:** Read the [investigation workflow](#investigation-workflow), [results table](#investigation-results-at-a-glance), and [evidence index](#evidence-index). Consult the [common report standard](docs/PORTFOLIO-REPORT-STANDARD.md) for inline screenshots, reasoning, limitations, technical summaries, and engineering decisions.
+**How to review:** Read the [investigation workflow](#investigation-workflow), [results table](#investigation-results-at-a-glance), and [evidence index](#evidence-index).
 
 **Outcome and relevance:** Demonstrates packet-capture design, network protocol fluency, evidence-based troubleshooting, Windows firewall validation, and disciplined interpretation of incomplete captures. This is a controlled lab, not a claimed production intrusion.
 
 ### Documentation and technical review
 
-- **[Professional case-study standard](docs/PORTFOLIO-REPORT-STANDARD.md):** consistent evidence-first investigation format, technical rationale, limitations and verified outcomes.
 - **[Technical study guide](docs/TECHNICAL-STUDY-GUIDE.md):** separate active-recall questions, command explanations and preparation notes.
 
 
