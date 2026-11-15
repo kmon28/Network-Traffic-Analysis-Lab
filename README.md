@@ -40,6 +40,8 @@
 - **[Technical study guide](docs/TECHNICAL-STUDY-GUIDE.md):** separate active-recall questions, command explanations and preparation notes.
 
 
+**[Technical reviewer guide](docs/reviewer-guide.md)** — a five-minute evidence path, artifact provenance, and interview questions.
+
 ## Executive Summary
 Analyzed network traffic in an isolated Windows Active Directory lab to understand normal domain communications, troubleshoot a failed ICMP test, and investigate unsuccessful TCP connections. The key outcomes were **a validated, subnet-scoped firewall remediation**, **a better packet-capture method for VM-to-VM traffic**, and **evidence-based interpretation of TCP/9997 retransmissions without labeling them malicious**.
 
