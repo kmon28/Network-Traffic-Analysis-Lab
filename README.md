@@ -1,6 +1,5 @@
 # Network Traffic Analysis & Active Directory Investigation
 
-**Quality and design standard:** [LEVEL UP portfolio standard](docs/LEVEL-UP-PORTFOLIO-STANDARD.md) — evidence-first SOC writing, reproducible detection engineering, and the 95+ verified quality target.
 
 ## Featured Investigations — 60-Second Review
 
