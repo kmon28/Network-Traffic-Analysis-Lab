@@ -45,6 +45,21 @@
 
 **[Technical reviewer guide](docs/reviewer-guide.md)** — a five-minute evidence path, artifact provenance, and interview questions.
 
+## Role alignment — what hiring teams can verify
+
+This repository is most directly relevant to **SOC Analyst, Cybersecurity Analyst, Network Security Analyst, and Security Operations** roles. It is one component of a broader portfolio, not a claim of production SOC employment.
+
+| Hiring requirement | Demonstrated here | Direct evidence |
+| --- | --- | --- |
+| Network incident triage | Investigated missing ICMP responses and distinguished observations from hypotheses | [ICMP capture](pcaps/ICMP_Firewall_Investigation.pcapng), [before/after screenshot](screenshots/01_icmp_request_reply_validation.png) |
+| Troubleshooting and remediation | Applied and retested a subnet-scoped inbound firewall rule rather than disabling protection | [ICMP investigation](#2-icmp-failure--scoped-firewall-fix) |
+| Packet capture engineering | Recognized a host-only capture blind spot and changed to VirtualBox NIC tracing | [Capture placement](#1-capture-placement-a-visibility-limitation) |
+| Windows/Active Directory network knowledge | Analyzed DNS SRV discovery, Kerberos TGS, LDAP, and SMB2/SYSVOL | [Protocol evidence](#evidence-index) |
+| TCP investigation and false-positive control | Compared completed handshake evidence with repeated SYN attempts and withheld unsupported process attribution | [Handshake](#4-tcp-successful-connection-establishment), [retransmissions](#8-tcp9997-investigate-dont-assume-compromise) |
+| Clear written communication | Recorded results, artifacts, unresolved questions, and evidence boundaries | [Reviewer guide](docs/reviewer-guide.md), [interview guide](docs/TECHNICAL-STUDY-GUIDE.md) |
+
+**Not demonstrated in this repository:** a confirmed intrusion, production-scale monitoring, independent packet-level reanalysis of all non-ICMP protocols, or a tested IDS/IPS detection rule. Those are distinct competencies rather than accomplishments to infer from these screenshots.
+
 ## Analyst review: from packets to conclusions
 
 **Connectivity:** [Original ICMP capture](pcaps/ICMP_Firewall_Investigation.pcapng) and [validation screenshot](screenshots/01_icmp_request_reply_validation.png) document a before/after test of a subnet-scoped firewall rule.
